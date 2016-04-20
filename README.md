@@ -1,6 +1,10 @@
 # meteor-simple-todos
 A simple Todos App using Meteor &amp; React.
 
+# Requirements
+
+ - [Meteor] (https://www.meteor.com/) >= 1.3.1
+
 # To run
 
 $ cd meteor-simple-todos
