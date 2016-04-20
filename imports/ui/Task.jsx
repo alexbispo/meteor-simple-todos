@@ -1,8 +1,16 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 
 import { Tasks } from '../api/tasks.js';
 
 export default class Task extends Component {
+	
+	constructor() {
+		super();
+		this.textTaskClassName = 'text';
+		this.inputTaskClassName = 'hidden';
+	}
+	
 	render(){
 		
 		const taskClassName = this.props.task.checked ? 'checked' : '';
@@ -20,11 +28,41 @@ export default class Task extends Component {
 				 onClick={this.toggleChecked.bind(this)} 
 				/>
 				
-				<span className="text">
+				<input className={this.inputTaskClassName} type="text" ref="inputTask"
+					onBlur={this.updateTask.bind(this)}
+				 />
+				 
+				<span className={this.textTaskClassName} ref="textTask"
+					onClick={this.editTask.bind(this)}
+				>
 					{this.props.task.text}
 				</span>
 			</li>
 		);
+	}
+	
+	updateTask() {
+		const text = ReactDOM.findDOMNode(this.refs.inputTask).value;
+		
+		Tasks.update(this.props.task._id, {
+			$set: { text: text }	
+		});
+		
+		ReactDOM.findDOMNode(this.refs.inputTask).value = '';
+		
+		ReactDOM.findDOMNode(this.refs.textTask).className = 'text';
+		ReactDOM.findDOMNode(this.refs.inputTask).className = 'hidden';
+	}
+	
+	editTask() {
+		if (!this.props.task.checked) {
+			ReactDOM.findDOMNode(this.refs.textTask).className = 'hidden';
+			ReactDOM.findDOMNode(this.refs.inputTask).className = '';
+			
+			ReactDOM.findDOMNode(this.refs.inputTask)
+				.value = ReactDOM.findDOMNode(this.refs.textTask).textContent;
+			ReactDOM.findDOMNode(this.refs.inputTask).focus();	
+		}
 	}
 	
 	toggleChecked() {
