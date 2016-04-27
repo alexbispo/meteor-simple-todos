@@ -8,7 +8,12 @@ import Task from './Task.jsx';
 class TaskList extends Component {
 	
 	renderTasks() {
-		return this.props.tasks.map((task) => (
+		let filteredTasks = this.props.tasks;
+		if (this.props.hideCompleted) {
+			filteredTasks = filteredTasks.filter(task => !task.checked);
+		}
+		
+		return filteredTasks.map((task) => (
 			<Task key={task._id} task={task} />
 		));
 	}
@@ -23,7 +28,8 @@ class TaskList extends Component {
 }
 
 TaskList.propTypes = {
-	tasks: PropTypes.array.isRequired	
+	tasks: PropTypes.array.isRequired,
+	hideCompleted: PropTypes.bool.isRequired	
 };
 
 export default createContainer(() => {
